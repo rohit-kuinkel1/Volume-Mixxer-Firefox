@@ -1,3 +1,4 @@
+
 var tc = {
   settings: {
     logLevel: 0,
@@ -5,81 +6,12 @@ var tc = {
   },
   vars : {
     dB: 0,
-    mono: false,
-    nightMode: false,
-    mute:false,
+    percentage:0,
+    nightMode: true,
+    muted:false,
     audioCtx: new AudioContext(),
-    gainNode: undefined, //defined during init
+    gainNode: undefined,
   }
-}
-
-function init(document){
-  log("Begin init", 5);
-  if (!document.body || document.body.classList.contains("volumecontrol-initialized")) {
-    log("Already initialized", 5);
-    return;
-  }
-  tc.vars.gainNode = tc.vars.audioCtx.createGain();
-  tc.vars.gainNode.channelInterpretation = "speakers";
-  document.querySelectorAll("audio, video").forEach(connectOutput);
-  document.arrive("audio, video", function (newElem) {
-    connectOutput(newElem);
-  });
-
-  browser.runtime.onMessage.addListener((message) => {
-    switch (message.command) {
-      case "setVolume":
-        tc.vars.dB = message.dB;
-        //setVolume(message.dB);
-        break;
-
-      case "getVolume":
-        return Promise.resolve({ response: tc.vars.dB });
-
-      case "setMono":
-        if (message.mono) {
-          enableMono();
-        } else {
-          disableMono();
-        }
-        break;
-
-      case "getMono":
-        return Promise.resolve({ response: tc.vars.mono });
-
-      case "getMute":
-        return Promise.resolve({ response: tc.vars.mute });
-
-      case "toggleMute":
-        tc.vars.mute = message.mute;
-        if (message.mute) {
-         setVolume(0);
-        }
-        else if (!message.mute) {
-          setVolume(400);
-        }
-        break;
-
-      case "getNightMode":
-        return Promise.resolve({ response: tc.vars.nightMode });
-
-      case "setNightMode":
-        tc.vars.nightMode = message.isNightMode;
-        if (message.isNightMode) {
-          document.body.classList.add("night-mode");
-        }
-        else {
-          document.body.classList.remove("night-mode");
-        }
-        break;
-
-      default:
-        log("Unknown command: " + message.command, 2);
-    }
-  });
-
-  document.body.classList.add("volumecontrol-initialized");
-  log("End init", 5);
 }
 
 function log(message, level) {
@@ -109,23 +41,59 @@ function connectOutput(element) {
 }
 
 function setVolume(percentage) {
-  currentVolume=((percentage /400) * 72) - 32; //in dB
-  tc.vars.gainNode.gain.value = Math.pow(10, currentVolume / 20);
-  tc.vars.dB = currentVolume;
+  const dB = ((percentage / 400) * 69) - 32; 
+  tc.vars.percentage = percentage;
+  tc.vars.gainNode.gain.value = Math.pow(10, dB / 20);
+  tc.vars.dB = dB;
 }
 
-function enableMono() {
-  tc.vars.mono = true;
-  tc.vars.gainNode.channelCountMode = "explicit";
-  tc.vars.gainNode.channelCount = 1;
-}
+function init(document){
+  log("Begin init", 5);
+  if (!document.body || document.body.classList.contains("volumecontrol-initialized")) {
+    log("Already initialized", 5);
+    return;
+  }
+  tc.vars.gainNode = tc.vars.audioCtx.createGain();
+  tc.vars.gainNode.channelInterpretation = "speakers";
+  document.querySelectorAll("audio, video").forEach(connectOutput);
+  document.arrive("audio, video", function (newElem) {
+    connectOutput(newElem);
+  });
 
-function disableMono() {
-  tc.vars.mono = false;
-  tc.vars.gainNode.channelCountMode = "max";
-  tc.vars.gainNode.channelCount = 2;
-}
+  browser.runtime.onMessage.addListener((message) => {
+    switch (message.command) {
+      case "setVolume":
+        setVolume(message.percentage);
+        break;
 
+      case "getVolume":
+        return Promise.resolve({ response: tc.vars.percentage });
+ 
+      case "getMute":
+        return Promise.resolve({ response: tc.vars.muted });
+     
+      case "toggleMute":
+        tc.vars.muted = message.mute;
+        if (message.muted) {
+          tc.vars.gainNode.gain.value = 0;
+          setVolume(0);
+        }
+        else {
+          setVolume(tc.vars.percentage);
+        }
+        break;
+        
+      case "getDisplayMode":
+        return Promise.resolve({ response: tc.vars.nightMode });
+      
+      case "setDisplayMode":
+        tc.vars.nightMode = message.isDayMode;
+        break;
+    }
+  });
+  document.body.classList.add("volumecontrol-initialized");
+  log("End init", 5);
+}
 
 function initWhenReady(document) {
   log("Begin initWhenReady", 5);
