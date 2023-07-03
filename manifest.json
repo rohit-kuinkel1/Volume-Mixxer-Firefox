@@ -1,0 +1,35 @@
+{
+  "manifest_version": 2,
+  "name": "Volume Mixxer",
+  "version": "1.0",
+  "description": "Boost Volume up to 600%. No Elevated Permissions required.",
+  "homepage_url": "https://github.com/rohit-kuinkel1/volume-mixxer",
+  "icons": {
+    "96": "icon.png"
+  },
+  "permissions": ["activeTab","tabs"],
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_title": "Volume Mixxer",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["lib/arrive.min.js","popup.js","cs.js"],
+      "all_frames": true,
+      "match_about_blank": true
+    }
+  ],
+  "commands": {
+    "_execute_browser_action": {
+      "description": "Opens Volume Mixxer"
+    }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "rohit.kuinkel@protonmail.com"
+  }
+}
+}
