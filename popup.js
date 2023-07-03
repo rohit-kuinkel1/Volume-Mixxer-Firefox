@@ -1,3 +1,8 @@
+/*
+      SEE LICENSE FOR USE CONDITIONS 
+*/
+
+
 function onEvent() {
   browser.tabs
     .query({ currentWindow: true, active: true })
