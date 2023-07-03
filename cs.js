@@ -1,3 +1,7 @@
+/*
+      SEE LICENSE FOR USE CONDITIONS 
+*/
+
 var tc = {
   settings: {
     logLevel: 0,
