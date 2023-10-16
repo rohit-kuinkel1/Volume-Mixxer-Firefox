@@ -1,18 +1,98 @@
 html,
 body {
-	width: 400px;
-	height: 188px;
+	width: 390px;
+	min-height: auto;
+	height: auto;
+	box-sizing: border-box;
 	font-family: Verdana, Geneva, sans-serif;
-	background-color: #000000; /* Dark mode background */
-	color: #ffffff; /* Dark mode text color */
 	padding: 0;
-	padding-left: 7px;
+	color: #000000;
 	padding-top: 10px;
-	border: none; /* Remove the border */
+	padding-left: 4px;
+	padding-right: 4px;
+	border: none;
 	outline: none;
+	overflow: hidden;
+	background-clip: padding-box;
+  }
+  
+  .footer p {
+    font-size: 14px;
+  }
 
+  .top-text {
+	font-size: 12px;
+	color: #525252;
+	margin-top: 1px;
+  }
+
+body.night-mode {
+	background-color: #000000;
+	color: #ffffff;
+	min-height: auto;
+	height: auto;
+  }
+  
+  .banner {
+	position: absolute;
+	top: 10px;
+	width: 30px;
+	height:15px;
+	right: 5px;
+  }
+  .undo-button {
+	display: inline-block;
+	padding: 11px 15px;
+	border: none;
+	border-radius: 50%;
+	background-color: transparent;
+	color: #ffffff;
+	font-size: 16px;
+	cursor: pointer;
+	background-image: url('undo.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	border: none;
+	outline: none;
+	margin-left: -16px;
+	position: relative;
 }
 
+.undo-button::after {
+	content: attr(data-tooltip); 
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	background-color: #777777;
+	color: #ffffff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 12px;
+	white-space: nowrap;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.5s ease;
+}
+
+.undo-button:hover::after {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+body.night-mode .undo-button {
+	color: #00ccff;
+  }
+
+body.day-mode .undo-button {
+	color: #000000;
+  }
+
+body.night-mode .undo-button:hover {
+	color: #ffffff;
+}
+
+  
 #volume-text {
 	border: none;
 	color: #ffffff; /* Dark mode text color */
@@ -29,11 +109,11 @@ body {
 }
 
 input:checked + .slider:before {
-	background-color: #000000; /* Bright red knob color when toggled on */
+	background-color: #000000; 
 }
 
   input:not(:checked) + .slider:before {
-	background-color: #ffffff; /* Solid white knob color when toggled off */
+	background-color: #ffffff;
 }
 
 .hidden {
@@ -57,6 +137,28 @@ input[type=range]:focus {
 	outline: none;
 }
 
+.solid-line {
+	border: none;
+	border-top: 1px solid #00ccff;
+	margin-top: 35px;
+	margin-bottom: -6px;
+  }
+  
+  
+input[type=range]::-webkit-slider-thumb,
+input[type=range]::-moz-range-thumb {
+	box-shadow: none;
+	border: none;
+	height: 18px;
+	width: 18px;
+	border-radius: 50%;
+	background: #000000; /* Slider knob color */
+	cursor: pointer;
+	-webkit-appearance: none;
+	margin-top: -3px;
+	transition: background-color 0.5s;
+}
+
 input[type=range],
 input[type=range]::-webkit-slider-runnable-track,
 input[type=range]::-moz-range-track {
@@ -66,12 +168,12 @@ input[type=range]::-moz-range-track {
 	box-shadow:none;
 	background: #00f7ff; /* dark Slider background color */
 	border-radius: 1;
-	border: none; /* Remove the border */
+	border: none; 
 }
 
 /*knob*/
-input[type=range]::-webkit-slider-thumb,
-input[type=range]::-moz-range-thumb {
+body.night-mode input[type=range]::-webkit-slider-thumb,
+body.night-mode input[type=range]::-moz-range-thumb {
 	box-shadow: none;
 	border: none;
 	height: 18px;
@@ -81,7 +183,22 @@ input[type=range]::-moz-range-thumb {
 	cursor: pointer;
 	-webkit-appearance: none;
 	margin-top: -3px;
-	transition: background-color 0.3s;
+	transition: background-color 0.5s;
+}
+
+input[type=range]:active::-webkit-slider-thumb,
+input[type=range]:active::-moz-range-thumb {
+  background: #cccccc; /* Change the color when the slider is clicked */
+}
+
+body.night-mode input[type=range]:active::-webkit-slider-thumb,
+body.night-mode input[type=range]:active::-moz-range-thumb {
+	background: #333333; /* Dark mode Slider knob color */
+}
+
+body.day-mode input[type=range]:active::-webkit-slider-thumb,
+body.day-mode input[type=range]:active::-moz-range-thumb {
+	background: #b1b1b1; /* Day mode Slider knob color */
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track,
@@ -98,6 +215,10 @@ input[type=range]::-ms-track {
 
 #volume-text:focus {
 	outline: none;
+}
+
+#volume-slider {
+	margin-top: 19px;
 }
 
 input[type=range]::-ms-fill-lower,
@@ -136,10 +257,10 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 40px;
+	width: 44px;
 	height: 24px;
 	margin-bottom: 4px;
-	margin-top: 5px;
+	margin-top: 4px;
 	border-radius: 12px;
 	background-color: #777777; /* Dark mode background */
 	overflow: hidden;
@@ -160,19 +281,19 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 	right: 0;
 	bottom: 0;
 	background-color: #777777; /* Dark mode background */
-	transition: .4s;
+	transition: .8s;
 	border-radius: 12px;
 }
 
 .slider:before {
 	position: absolute;
 	content: "";
-	height: 16px;
-	width: 16px;
-	left: 4px;
-	bottom: 4px;
+	height: 14px;
+	width: 14px;
+	left: 7px;
+	bottom: 5px;
 	background-color: #000000; /* Dark mode knob color */
-	transition: .4s;
+	transition: .8s;
 	border-radius: 8px;
 }
 
@@ -185,21 +306,27 @@ input:checked + .slider:before {
 }
 
 body.day-mode {
-	width: 400px;
-	height: 200px;
+	width: 390px;
+	min-height: auto;
+	height: auto;
+	box-sizing: border-box;
+	padding-left: 4px;
+	padding-right: 4px;
 	font-family: Verdana, Geneva, sans-serif;
-	background-color: #ffffff; /* day mode background */
-	color: #000000; /* day mode text color */
-	padding: 0; /* Remove the default padding */
-	padding-top: 10px; /* Remove the default padding */
-	padding-left: 7px;
-	border: none; /* Remove the border */
-	outline:none;
+	padding: 0;
+	background-color: #ffffff;
+	color: #000000;
+	padding-top: 10px;
+	border: none;
+	outline: none;
+	overflow: hidden;
+	background-clip: padding-box;
 }
 
 body.day-mode .switch {
 	background-color: #00ccff; /* Light mode background */
 }
+
 
 body.day-mode .slider {
 	background-color: #777777; /* Light mode background */
@@ -214,7 +341,7 @@ body.day-mode input[type=range]::-moz-range-track {
 	box-shadow:none;
 	background: #000000; /* dark Slider background color */
 	border-radius: 1;
-	border: none; /* Remove the border */
+	border: none;
 }
 
 body.day-mode .slider:before {
@@ -228,6 +355,7 @@ body.day-mode .slider:after {
 body.day-mode input[type=range]::-webkit-slider-thumb,
 body.day-mode input[type=range]::-moz-range-thumb {
 	background: #000000; /* Dark mode slider color */
+	display: none;
 }
 
 body.day-mode #volume-text {
@@ -235,13 +363,148 @@ body.day-mode #volume-text {
 }
 
 body.day-mode .switch input[type="checkbox"]:checked + .slider {
-	background-color: #000000; /* Light mode slider checked on background */
+	background-color: #000000; 
 }
 
 body.day-mode input:checked + .slider:before {
-	background-color: #ffffff; /* Bright white knob color when toggled on */
+	background-color: #ffffff; 
   }
   
   body.day-mode input:not(:checked) + .slider:before {
-	background-color: #000000; /* Solid black knob color when toggled off */
+	background-color: #000000; 
   }
+
+  .favicon {
+	width: 20px;
+	height: 20px;
+	margin-right: 8px;
+	vertical-align: middle;
+  }
+  
+  .title {
+	font-weight: normal;
+	font-size: 12px;
+	align-items: left;
+	margin-left: -5px;
+	list-style-type: decimal;
+  }
+
+  /*header*/
+
+  .header-small {
+  font-size: 14px;
+  position: relative;
+  font-weight: normal;
+  padding-right: 40px;
+}
+
+
+.header-small::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #000000; 
+}
+
+
+body.night-mode .header-small::after {
+  background-color: #ffffff;
+}
+
+
+body.day-mode .header-small::after {
+  background-color: #000000;
+}
+
+.header-small::after {
+  bottom: -5px;
+}
+
+#tab-list li {
+	cursor: pointer;
+	font-weight: normal;
+	font-size: 12px;
+	align-items: left;
+	list-style: none;
+	color: rgb(190, 190, 190);
+	transition: background-color 0.3s; 
+	border-radius: 13px; 
+	padding-bottom: 15px;
+  }
+
+  body.day-mode #tab-list li {
+	cursor: pointer;
+	font-weight: normal;
+	font-size: 12px;
+	align-items: left;
+	list-style: none;
+	color: rgb(65, 65, 65);
+	transition: background-color 0.5s; 
+	border-radius: 13px;
+	padding-bottom: 15px;
+  }
+
+  #tab-list li:hover {
+	cursor: pointer;
+	background-color: #202020;
+	border-radius: 17px;
+	margin-left: -10px;
+	padding-top: 8px;
+	padding-bottom: 8px;
+	padding-left: 12px;
+	transition: 0.3s;
+	transform: translate(-5px, -7px);
+  }
+  
+  body.night-mode #tab-list li:hover {
+	background-color: #202020;
+	border-radius: 20px;
+	color: #ffffff;
+  }
+  
+  body.day-mode #tab-list li:hover {
+	background-color: #c0c0c0;
+	border-radius: 20px;
+	color: #000000;
+  }
+
+  #tab-list {
+	text-align: left;
+	margin-left: -30px;
+  }
+
+  .github-button{
+	font-size: 16px;
+  }
+  .github-button:hover {
+	position: relative;
+	animation: blinkers 2s infinite;
+  }
+
+  .rate-link {
+	font-size: 16px;
+  }
+
+@keyframes blinkers {
+0% {
+  opacity: 0;
+  color: rgb(19, 0, 126); 
+}
+25% {
+  color: rgb(133, 0, 0); 
+}
+50% {
+  opacity: 1;
+  color: rgb(0, 255, 242); 
+}
+75% {
+  color: rgb(136, 255, 0); 
+}
+100% {
+  opacity: 0;
+  color: rgb(238, 255, 0);
+}
+}
+

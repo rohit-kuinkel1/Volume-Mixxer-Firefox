@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="color-scheme" content="light-dark">
@@ -7,6 +7,11 @@
 </head>
 <body>
   <div id="popup-content" class="center">
+    <div class="top-text">
+      Use the Slider to control Volume of the current Tab.<br>Click on the desired tab in "Active Tabs" section to navigate to your desired Tab.
+    </div>
+    <img class="banner" src="banner.png">
+    <button id="undo-button" class="undo-button" data-tooltip="Reset volume back to 150%"></button>
     <input type="range" id="volume-slider" value="100" min="0" max="400" step="1">
     <input type="text" id="volume-text" value="100%" readonly>
     <br>
@@ -24,12 +29,18 @@
       </label>
       <span style="position:relative; top:-10px;left: 3px;">Day Mode</span>
     </div>
+
+    <h2 class="header-small">Active Tabs:</h2>
+    <ul id="tab-list" class="hidden"></ul>
   </div>
-
   <footer class="footer">
-    <p>Thank you for using this extension. <a href="https://github.com/rohit-kuinkel1/" style="color: #026891;right: 2px;">GitHub</a>.</p>
+    <hr class="solid-line">
+    <p>
+      <a href="https://addons.mozilla.org/en-CA/firefox/addon/volume-mixxer/" class="rate-link" style="color: #007bac;">Rate it</a>
+      <a href="https://github.com/rohit-kuinkel1/volume-mixxer" class="github-button" style="color: #007bac; float: right;">GitHub</a>.
+    </p>
   </footer>
-
+  
   <script src="popup.js"></script>
 </body>
 </html>

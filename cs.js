@@ -1,18 +1,47 @@
-
 var tc = {
   settings: {
     logLevel: 0,
     defaultLogLevel: 4,
   },
   vars : {
-    dB: 0,
-    percentage:0,
-    nightMode: true,
+    percentage:100,
+    dayMode: false,
     muted:false,
     audioCtx: new AudioContext(),
     gainNode: undefined,
   }
 }
+
+browser.runtime.onMessage.addListener((message) => {
+  switch (message.command) {
+
+    case "setVolume":
+      setVolume(Number(message.percentage));
+      break;
+
+    case "getVolume":
+      return Promise.resolve({ response: tc.vars.percentage });
+
+    case "getMute":
+      return Promise.resolve({ response: tc.vars.muted });
+    
+    case "getDisplayMode":
+      return Promise.resolve({ response: tc.vars.dayMode });
+    
+    case "setDisplayMode":
+      tc.vars.dayMode = message.isDayMode;
+      break;
+
+    case "setMute":
+      tc.vars.muted = message.isMuted;
+      break;
+
+    case "avoidEarRape":
+      avoidEarRape();
+      break;
+    
+  }
+});
 
 function log(message, level) {
   const verbosity = tc.settings.logLevel;
@@ -41,15 +70,31 @@ function connectOutput(element) {
 }
 
 function setVolume(percentage) {
-  const dB = ((percentage / 400) * 69) - 32; 
-  tc.vars.percentage = percentage;
+  const dB = Number(((percentage / 400) * 72) - 32); 
+  tc.vars.muted= percentage===0 ?  true :  false;
+  tc.vars.percentage = Number(percentage);
+
   tc.vars.gainNode.gain.value = Math.pow(10, dB / 20);
-  tc.vars.dB = dB;
+  avoidEarRape();
 }
+
+function avoidEarRape()
+{
+  const maxGainValue = 100; 
+    if (tc.vars.gainNode.gain.value > maxGainValue) {
+      tc.vars.gainNode.gain.value = maxGainValue;
+      setVolume(400);
+    } 
+    if(tc.vars.muted){
+      tc.vars.gainNode.gain.value = 0;
+    }
+    //window.alert("checking every 1 sec");
+}
+
 
 function init(document){
   log("Begin init", 5);
-  if (!document.body || document.body.classList.contains("volumecontrol-initialized")) {
+  if (!document.body) {
     log("Already initialized", 5);
     return;
   }
@@ -60,38 +105,6 @@ function init(document){
     connectOutput(newElem);
   });
 
-  browser.runtime.onMessage.addListener((message) => {
-    switch (message.command) {
-      case "setVolume":
-        setVolume(message.percentage);
-        break;
-
-      case "getVolume":
-        return Promise.resolve({ response: tc.vars.percentage });
- 
-      case "getMute":
-        return Promise.resolve({ response: tc.vars.muted });
-     
-      case "toggleMute":
-        tc.vars.muted = message.mute;
-        if (message.muted) {
-          tc.vars.gainNode.gain.value = 0;
-          setVolume(0);
-        }
-        else {
-          setVolume(tc.vars.percentage);
-        }
-        break;
-        
-      case "getDisplayMode":
-        return Promise.resolve({ response: tc.vars.nightMode });
-      
-      case "setDisplayMode":
-        tc.vars.nightMode = message.isDayMode;
-        break;
-    }
-  });
-  document.body.classList.add("volumecontrol-initialized");
   log("End init", 5);
 }
 

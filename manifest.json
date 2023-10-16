@@ -1,35 +1,38 @@
 {
   "manifest_version": 2,
-  "name": "Volume Control",
-  "version": "2.4",
-  "description": "Adds a volume control for the current site, that can also boost the volume beyond the normal range.",
-  "homepage_url": "https://github.com/Chaython/volumecontrol",
+  "name": "Volume Mixxer",
+  "version": "1.3",
+  "description": "Boost Volume up to 600%. No Elevated Permissions required.",
+  "homepage_url": "https://github.com/rohit-kuinkel1/volume-mixxer",
   "icons": {
     "96": "icon.png"
   },
-  "permissions": ["activeTab"],
-
+  "permissions": ["activeTab", "tabs"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "browser_action": {
     "default_icon": "icon.png",
-    "default_title": "Volume Control",
+    "default_title": "Volume Mixxer",
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["lib/arrive.min.js", "cs.js","popup.js"],
+      "js": ["lib/arrive.min.js", "popup.js", "cs.js"],
       "all_frames": true,
       "match_about_blank": true
     }
   ],
   "commands": {
     "_execute_browser_action": {
-      "description": "Open volume control"
+      "description": "Opens Volume Mixxer"
     }
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "tets@web.us"
+      "id": "rohit.kuinkel@protonmail.com"
     }
   }
 }
