@@ -1,6 +1,6 @@
 html,
 body {
-	width: 390px;
+	width: 333px;
 	min-height: auto;
 	height: auto;
 	box-sizing: border-box;
@@ -14,47 +14,49 @@ body {
 	outline: none;
 	overflow: hidden;
 	background-clip: padding-box;
-  }
-  
-  .footer p {
-    font-size: 14px;
-  }
+}
 
-  .top-text {
-	font-size: 12px;
-	color: #525252;
+.footer p {
+    font-size: 14px;
+}
+
+.top-text {
+	font-size: 11px;
+	color: #707070;
 	margin-top: 1px;
-  }
+}
 
 body.night-mode {
 	background-color: #000000;
 	color: #ffffff;
-	min-height: auto;
-	height: auto;
-  }
-  
-  .banner {
+}
+
+body.day-mode {
+	background-color: #ffffff;
+	color: #000000;
+}
+
+.banner {
 	position: absolute;
-	top: 10px;
-	width: 30px;
-	height:15px;
+	top: 8px;
+	width: 32px;
+	height: 18px;
 	right: 5px;
-  }
-  .undo-button {
+}
+
+.undo-button {
 	display: inline-block;
 	padding: 11px 15px;
 	border: none;
 	border-radius: 50%;
 	background-color: transparent;
-	color: #ffffff;
+	color: #000000; /* Default color */
 	font-size: 16px;
 	cursor: pointer;
 	background-image: url('undo.png');
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
-	border: none;
-	outline: none;
 	margin-left: -16px;
 	position: relative;
 }
@@ -82,22 +84,19 @@ body.night-mode {
 
 body.night-mode .undo-button {
 	color: #00ccff;
-  }
+}
 
 body.day-mode .undo-button {
 	color: #000000;
-  }
+}
 
 body.night-mode .undo-button:hover {
 	color: #ffffff;
 }
 
-  
-#volume-text {
-	border: none;
-	color: #ffffff; /* Dark mode text color */
+body.day-mode .undo-button:hover {
+	color: #000000;
 }
-
 
 #volume-text {
 	width: auto;
@@ -105,14 +104,18 @@ body.night-mode .undo-button:hover {
 	background-color: transparent;
 	text-align: center;
 	font-size: 16px;
-	color: #ffffff; /* Dark mode volume text color */
+	color: #ffffff;
+}
+
+body.day-mode #volume-text {
+	color: #000000;
 }
 
 input:checked + .slider:before {
 	background-color: #000000; 
 }
 
-  input:not(:checked) + .slider:before {
+input:not(:checked) + .slider:before {
 	background-color: #ffffff;
 }
 
@@ -120,11 +123,24 @@ input:checked + .slider:before {
 	display: none;
 }
 
+.title {
+	font-family: 'Roboto Condensed', sans-serif;
+	font-weight: 700;
+	font-size: 12px;
+	margin-left: 8px; 
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	max-width: 220px; 
+	display: inline-block; 
+	vertical-align: middle; 
+}
+
 .center {
 	text-align: center;
 }
 
-.left {
+.text-left {
 	text-align: left;
 }
 
@@ -139,12 +155,19 @@ input[type=range]:focus {
 
 .solid-line {
 	border: none;
-	border-top: 1px solid #00ccff;
+	border-top: 1px solid #8a8a8a;
 	margin-top: 35px;
 	margin-bottom: -6px;
-  }
-  
-  
+}
+
+body.night-mode .solid-line {
+	border-top-color: #ffffff;
+}
+
+body.day-mode .solid-line {
+	border-top-color: #000000;
+}
+
 input[type=range]::-webkit-slider-thumb,
 input[type=range]::-moz-range-thumb {
 	box-shadow: none;
@@ -152,7 +175,7 @@ input[type=range]::-moz-range-thumb {
 	height: 18px;
 	width: 18px;
 	border-radius: 50%;
-	background: #000000; /* Slider knob color */
+	background: #000000; /* Default knob color */
 	cursor: pointer;
 	-webkit-appearance: none;
 	margin-top: -3px;
@@ -165,45 +188,38 @@ input[type=range]::-moz-range-track {
 	width: 88%;
 	height: 5px;
 	cursor: hand;
-	box-shadow:none;
-	background: #00f7ff; /* dark Slider background color */
+	box-shadow: none;
+	background: #00f7ff; /* Default slider background color */
 	border-radius: 1;
-	border: none; 
+	border: none;
 }
 
-/*knob*/
 body.night-mode input[type=range]::-webkit-slider-thumb,
 body.night-mode input[type=range]::-moz-range-thumb {
-	box-shadow: none;
-	border: none;
-	height: 18px;
-	width: 18px;
-	border-radius: 50%;
-	background: #ffffff; /* Slider knob color */
-	cursor: pointer;
-	-webkit-appearance: none;
-	margin-top: -3px;
-	transition: background-color 0.5s;
+	background: #ffffff;
+}
+
+body.day-mode input[type=range]::-webkit-slider-thumb,
+body.day-mode input[type=range]::-moz-range-thumb {
+	background: #000000;
 }
 
 input[type=range]:active::-webkit-slider-thumb,
 input[type=range]:active::-moz-range-thumb {
-  background: #cccccc; /* Change the color when the slider is clicked */
+	background: #cccccc; /* Default active knob color */
 }
 
 body.night-mode input[type=range]:active::-webkit-slider-thumb,
 body.night-mode input[type=range]:active::-moz-range-thumb {
-	background: #333333; /* Dark mode Slider knob color */
+	background: #333333;
 }
 
 body.day-mode input[type=range]:active::-webkit-slider-thumb,
 body.day-mode input[type=range]:active::-moz-range-thumb {
-	background: #b1b1b1; /* Day mode Slider knob color */
+	background: #b1b1b1;
 }
 
 input[type=range]:focus::-webkit-slider-runnable-track,
-
-
 input[type=range]::-ms-track {
 	width: 80%;
 	height: 10px;
@@ -235,14 +251,14 @@ input[type=range]::-ms-thumb {
 	height: 16px;
 	width: 16px;
 	border-radius: 50%;
-	background: #777777; /* day Slider knob color */
+	background: #777777; /* Default knob color */
 	cursor: pointer;
 	height: 10px;
 }
 
 input[type=range]:focus::-ms-fill-lower,
 input[type=range]:focus::-ms-fill-upper {
-	background: #000000; /* day Slider background color */
+	background: #000000; /* Default slider background color */
 }
 
 input[type=range]::-webkit-slider-runnable-track::-webkit-slider-thumb {
@@ -253,16 +269,15 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 	background-color: rgb(255, 255, 255);
 }
 
-/* Dark Mode Styles */
 .switch {
 	position: relative;
 	display: inline-block;
-	width: 44px;
+	width: 42px;
 	height: 24px;
 	margin-bottom: 4px;
 	margin-top: 4px;
-	border-radius: 12px;
-	background-color: #777777; /* Dark mode background */
+	border-radius: 13px;
+	background-color: #777777; /* Default switch background */
 	overflow: hidden;
 }
 
@@ -272,7 +287,6 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 	height: 0;
 }
 
-/* slider for night mode*/
 .slider {
 	position: absolute;
 	cursor: pointer;
@@ -280,9 +294,7 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 	left: 0;
 	right: 0;
 	bottom: 0;
-	background-color: #777777; /* Dark mode background */
-	transition: .8s;
-	border-radius: 12px;
+	background-color: #707070; /* Default slider background */
 }
 
 .slider:before {
@@ -292,74 +304,48 @@ input[type=range]::-moz-range-track::-moz-range-thumb {
 	width: 14px;
 	left: 7px;
 	bottom: 5px;
-	background-color: #000000; /* Dark mode knob color */
-	transition: .8s;
-	border-radius: 8px;
+	background-color: #000000; /* Default knob color */
+	transition: .5s;
+	border-radius: 50%;
 }
 
 input:checked + .slider {
-	background-color: #ffffff; /* Dark mode background */
+	background-color: #0199c7; /* Default slider background when checked */
 }
 
 input:checked + .slider:before {
-	transform: translateX(16px);
+	transform: translateX(12px);
 }
-
-body.day-mode {
-	width: 390px;
-	min-height: auto;
-	height: auto;
-	box-sizing: border-box;
-	padding-left: 4px;
-	padding-right: 4px;
-	font-family: Verdana, Geneva, sans-serif;
-	padding: 0;
-	background-color: #ffffff;
-	color: #000000;
-	padding-top: 10px;
-	border: none;
-	outline: none;
-	overflow: hidden;
-	background-clip: padding-box;
-}
-
-body.day-mode .switch {
-	background-color: #00ccff; /* Light mode background */
-}
-
 
 body.day-mode .slider {
-	background-color: #777777; /* Light mode background */
+	background-color: #777777;
+}
+
+body.night-mode .slider:before {
+	background-color: #000000;
+}
+
+body.day-mode .slider:before {
+	background-color: #000000;
 }
 
 body.day-mode input[type=range],
 body.day-mode input[type=range]::-webkit-slider-runnable-track,
 body.day-mode input[type=range]::-moz-range-track {
-	width: 88%;
-	height: 5px;
-	cursor: hand;
-	box-shadow:none;
-	background: #000000; /* dark Slider background color */
-	border-radius: 1;
-	border: none;
-}
-
-body.day-mode .slider:before {
-	background-color: #000000; /* Dark mode knob color */
-}
-
-body.day-mode .slider:after {
-	background-color: #000000; /* Dark mode knob color */
+	background: #000000; /* Default slider background in day mode */
 }
 
 body.day-mode input[type=range]::-webkit-slider-thumb,
 body.day-mode input[type=range]::-moz-range-thumb {
-	background: #000000; /* Dark mode slider color */
-	display: none;
+	background: #000000; /* Default knob color in day mode */
 }
 
-body.day-mode #volume-text {
-	color: #000000; /* Dark mode text color */
+body.day-mode .switch {
+	background-color: #00ccff;
+}
+
+body.night-mode .switch input[type="checkbox"]:checked + .slider {
+	background-color: #ffffff; 
 }
 
 body.day-mode .switch input[type="checkbox"]:checked + .slider {
@@ -367,59 +353,54 @@ body.day-mode .switch input[type="checkbox"]:checked + .slider {
 }
 
 body.day-mode input:checked + .slider:before {
-	background-color: #ffffff; 
-  }
-  
-  body.day-mode input:not(:checked) + .slider:before {
-	background-color: #000000; 
-  }
+	background-color: #ffffff;
+}
 
-  .favicon {
+body.day-mode input:not(:checked) + .slider:before {
+	background-color: #000000;
+}
+
+.favicon {
 	width: 20px;
 	height: 20px;
 	margin-right: 8px;
 	vertical-align: middle;
-  }
-  
-  .title {
+}
+
+.title {
 	font-weight: normal;
 	font-size: 12px;
 	align-items: left;
 	margin-left: -5px;
 	list-style-type: decimal;
-  }
-
-  /*header*/
-
-  .header-small {
-  font-size: 14px;
-  position: relative;
-  font-weight: normal;
-  padding-right: 40px;
 }
 
+.header-small {
+	font-size: 16px;
+	padding-top: 15px;
+	font-family: 'Montserrat', sans-serif;
+	position: relative;
+	letter-spacing: 0.4px;
+	font-weight: normal;
+	margin: auto;
+}
 
 .header-small::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: #000000; 
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 1px;
+	background-color: #000000; /* Default line color */
+	bottom: -5px;
 }
-
 
 body.night-mode .header-small::after {
-  background-color: #ffffff;
+	background-color: #ffffff;
 }
-
 
 body.day-mode .header-small::after {
-  background-color: #000000;
-}
-
-.header-small::after {
-  bottom: -5px;
+	background-color: #000000;
 }
 
 #tab-list li {
@@ -428,83 +409,79 @@ body.day-mode .header-small::after {
 	font-size: 12px;
 	align-items: left;
 	list-style: none;
-	color: rgb(190, 190, 190);
-	transition: background-color 0.3s; 
+	color: rgb(190, 190, 190); /* Default text color */
+	transition: background-color 0.5s; 
 	border-radius: 13px; 
 	padding-bottom: 15px;
-  }
+}
 
-  body.day-mode #tab-list li {
-	cursor: pointer;
-	font-weight: normal;
-	font-size: 12px;
-	align-items: left;
-	list-style: none;
-	color: rgb(65, 65, 65);
-	transition: background-color 0.5s; 
-	border-radius: 13px;
-	padding-bottom: 15px;
-  }
+body.day-mode #tab-list li {
+	color: rgb(65, 65, 65); /* Text color in day mode */
+}
 
-  #tab-list li:hover {
+#tab-list li:hover {
 	cursor: pointer;
 	background-color: #202020;
 	border-radius: 17px;
 	margin-left: -10px;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	padding-left: 12px;
+	padding-top: 6px;
+	padding-bottom: 6px;
+	padding-left: 10px;
 	transition: 0.3s;
-	transform: translate(-5px, -7px);
-  }
-  
-  body.night-mode #tab-list li:hover {
-	background-color: #202020;
-	border-radius: 20px;
-	color: #ffffff;
-  }
-  
-  body.day-mode #tab-list li:hover {
-	background-color: #c0c0c0;
-	border-radius: 20px;
-	color: #000000;
-  }
+	transform: translate(5px, -5px);
+}
 
-  #tab-list {
+body.night-mode #tab-list li:hover {
+	background-color: #424242;
+	color: #ffffff;
+}
+
+body.day-mode #tab-list li:hover {
+	background-color: #c0c0c0;
+	color: #000000;
+}
+
+#tab-list {
 	text-align: left;
 	margin-left: -30px;
-  }
+}
 
-  .github-button{
-	font-size: 16px;
-  }
-  .github-button:hover {
+.github-button {
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.github-button:hover {
 	position: relative;
 	animation: blinkers 2s infinite;
-  }
+}
 
-  .rate-link {
-	font-size: 16px;
-  }
+.rate-link {
+	font-size: 12px;
+	text-decoration: none;
+}
+
+.footer-links{
+	margin-bottom: 0px;
+}
 
 @keyframes blinkers {
-0% {
-  opacity: 0;
-  color: rgb(19, 0, 126); 
+	0% {
+		opacity: 0;
+		color: rgb(19, 0, 126); 
+	}
+	25% {
+		color: rgb(133, 0, 0); 
+	}
+	50% {
+		opacity: 1;
+		color: rgb(0, 255, 242); 
+	}
+	75% {
+		color: rgb(136, 255, 0); 
+	}
+	100% {
+		opacity: 0;
+		color: rgb(238, 255, 0);
+	}
 }
-25% {
-  color: rgb(133, 0, 0); 
-}
-50% {
-  opacity: 1;
-  color: rgb(0, 255, 242); 
-}
-75% {
-  color: rgb(136, 255, 0); 
-}
-100% {
-  opacity: 0;
-  color: rgb(238, 255, 0);
-}
-}
-

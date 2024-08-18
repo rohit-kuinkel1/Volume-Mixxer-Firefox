@@ -51,7 +51,8 @@ function onEvent() {
         tabList.firstChild.remove();
       }
 
-      if (playingTabs.length === 0) {
+      if (playingTabs.length === 0) 
+      {
         const listItem = document.createElement("li");
         listItem.textContent = "No tabs are playing audio right now";
         tabList.appendChild(listItem);
@@ -65,8 +66,7 @@ function onEvent() {
         faviconImg.src = tab.favIconUrl;
         faviconImg.classList.add("favicon");
 
-        const truncatedTitle =
-          tab.title.length > 45 ? tab.title.slice(0, 45) + "..." : tab.title;
+        const truncatedTitle = tab.title;
         titleSpan.textContent = truncatedTitle;
         titleSpan.title = tab.title;
         titleSpan.classList.add("title");
@@ -78,29 +78,35 @@ function onEvent() {
 
       tabList.classList.remove("hidden");
     })
-    .catch((error) => {
-      alert("Error retrieving audible tabs:", error);
-    });
+    .catch(e);
 
-  function handleChangeInInput(event) {
-    if (event.target.id === "volume-slider") {
+  function handleChangeInInput(event) 
+  {
+    if (event.target.id === "volume-slider") 
+    {
       updateVolumeFromSlider();
-    } else if (event.target.id === "mute-checkbox") {
+    } 
+    else if (event.target.id === "mute-checkbox") 
+    {
       const muteCheckbox = document.querySelector("#mute-checkbox");
       toggleMute(muteCheckbox.checked);
-    } else if (event.target.id === "display-mode") {
+    } 
+    else if (event.target.id === "display-mode") 
+    {
       const displayModeCheckBox = document.querySelector("#display-mode");
       toggleDisplayMode(displayModeCheckBox.checked);
     }
   }
 
-  function handleUndoButtonClick() {
+  function handleUndoButtonClick() 
+  {
     const muteCheckbox = document.querySelector("#mute-checkbox");
     muteCheckbox.checked = false;
     setVolume(100);
   }
 
-  function toggleMute(isMuted) {
+  function toggleMute(isMuted) 
+  {
     const muteCheckbox = document.querySelector("#mute-checkbox");
     isMuted
       ? ((muteCheckbox.checked = true), setVolume(0))
@@ -114,12 +120,13 @@ function onEvent() {
       .catch(e);
   }
 
-  function setVolume(percentage) {
+  function setVolume(percentage) 
+  {
     const volumeSlider = document.querySelector("#volume-slider");
     const volumeText = document.querySelector("#volume-text");
     
     volumeSlider.value = Number(percentage);
-    const volText = 1.5 * Number(percentage);
+    const volText = 1.0 * Number(percentage);
     volumeText.value = Math.round(volText) + "%";
 
     browser.tabs
@@ -133,21 +140,26 @@ function onEvent() {
       .catch(e);
   }
 
-   function updateVolumeFromSlider() {
-   const volumeSlider = document.querySelector("#volume-slider");
-   const muteCheckbox = document.querySelector("#mute-checkbox");
-   volumeSlider.value == 0 ? (muteCheckbox.checked = true) : (muteCheckbox.checked = false);
+   function updateVolumeFromSlider() 
+  {
+    const volumeSlider = document.querySelector("#volume-slider");
+    const muteCheckbox = document.querySelector("#mute-checkbox");
+    volumeSlider.value == 0 ? (muteCheckbox.checked = true) : (muteCheckbox.checked = false);
     setVolume(Number(volumeSlider.value));
   }
 
-  function toggleDisplayMode(isDayMode) {
+  function toggleDisplayMode(isDayMode) 
+  {
     const body = document.body;
     const displayModeCheckBox = document.querySelector("#display-mode");
     displayModeCheckBox.checked = isDayMode;
 
-    if (isDayMode) {
+    if (isDayMode) 
+      {
       body.classList.add("day-mode");
-    } else {
+    } 
+    else 
+    {
       body.classList.remove("day-mode");
       body.classList.add("night-mode");
     }
@@ -163,13 +175,16 @@ function onEvent() {
       .catch(e);
   }
 
-  function handleChangeInMuteBox() {
+  function handleChangeInMuteBox() 
+  {
     const muteCheckbox = document.querySelector("#mute-checkbox");
     muteCheckbox.checked ? setVolume(0) : setVolume(100);
   }
 
-  function handleTabClick(event) {
-    if (event.target.tagName === "LI") {
+  function handleTabClick(event) 
+  {
+    if (event.target.tagName === "LI") 
+    {
       const tabIndex = Array.from(tabList.children).indexOf(event.target);
 
       browser.tabs
@@ -181,26 +196,31 @@ function onEvent() {
           }
         })
         .catch((error) => {
-          console.error("Error retrieving audible tabs:", error);
+          console.error("VolumeMixxer: Error retrieving audible tabs:", error);
         });
-    } else if (event.target.tagName === "SPAN") {
+    } 
+    else if (event.target.tagName === "SPAN") 
+    {
       const tabTitle = event.target.title;
 
       browser.tabs
         .query({ audible: true })
         .then((playingTabs) => {
           const matchingTab = playingTabs.find((tab) => tab.title === tabTitle);
-          if (matchingTab) {
+          if (matchingTab) 
+            {
             browser.tabs.update(matchingTab.id, { active: true });
           }
         })
-        .catch((error) => {
-          console.error("Error retrieving audible tabs:", error);
+        .catch((error) => 
+        {
+          console.error("VolumeMixxer: Error retrieving audible tabs:", error);
         });
     }
   }
 
-  function handleChangeInDisplayMode() {
+  function handleChangeInDisplayMode() 
+  {
     const displayModeCheckBox = document.querySelector("#display-mode");
     displayModeCheckBox.checked
       ? body.classList.add("day-mode")
@@ -217,16 +237,18 @@ function onEvent() {
       .catch(e);
   }
 
-  function showError(error) {
+  function showError(error) 
+  {
     const popupContent = document.querySelector("#popup-content");
     const errorContent = document.querySelector("#error-content");
     popupContent.classList.add("hidden");
     errorContent.classList.remove("hidden");
-    console.error(`Volume Control: Error: ${error.message}`);
+    console.error(`VolumeMixxer: Error: ${error.message}`);
   }
 
-  function e(error) {
-    console.error(`Volume Control: Error: ${error}`);
+  function e(error) 
+  {
+    console.error(`VolumeMixxer: Error: ${error}`);
   }
 }
 
