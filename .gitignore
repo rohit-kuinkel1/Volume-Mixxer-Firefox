@@ -3,4 +3,4 @@ web-ext-artifacts/
 *.jpg
 *.jpeg
 lib/
-
+!images/*.png
