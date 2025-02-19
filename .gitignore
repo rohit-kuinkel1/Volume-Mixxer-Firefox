@@ -4,3 +4,4 @@ web-ext-artifacts/
 *.jpeg
 lib/
 !images/*.png
+images/internal_images

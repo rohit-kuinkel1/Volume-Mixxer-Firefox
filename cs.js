@@ -34,10 +34,7 @@ browser.runtime.onMessage.addListener((message) => {
       break;
     case "setMute":
       tc.vars.muted = message.isMuted;
-      break;
-    case "avoidEarRape":
-      avoidEarRape();
-      break;    
+      break;  
     case "setLoop":
       tc.vars.loopEnabled = message.isLooped;
       const videos = document.querySelectorAll('video');
@@ -97,23 +94,6 @@ function setVolume(percentage)
   tc.vars.gainNode.gain.value = gainValue;
   avoidEarRape();
 }
-
-function avoidEarRape() {
-  const maxGainValue = 100;
-
-  if (tc.vars.gainNode.gain.value > maxGainValue) 
-  {
-    tc.vars.gainNode.gain.value = maxGainValue;
-    setVolume(400); // Reset volume to 400% to apply max gain limit correctly
-  }
-
-  if (tc.vars.muted) 
-  {
-    tc.vars.gainNode.gain.value = 0;
-  }
-  //console.log(`VolumeMixxer: gainNode value adjusted to ${tc.vars.gainNode.gain.value}`);
-}
-
 
 function init(document)
 {

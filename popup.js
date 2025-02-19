@@ -265,11 +265,11 @@ function onEvent() {
 function createLoopButton(tabId) { 
   const button = document.createElement('button');
   button.classList.add('loop-button');
-  button.setAttribute('data-tooltip', 'Press to loop');
+  button.setAttribute('data-tooltip', 'Press for loop playback');
   button.dataset.tabId = tabId;  
   
   const img = document.createElement('img');
-  img.src = 'images/repeat.png';
+  img.src = 'images/internal_images/repeat.png';
   img.alt = 'Loop';
   img.width = 16;
   img.height = 16;
