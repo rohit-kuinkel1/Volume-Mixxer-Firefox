@@ -23,6 +23,13 @@ function onEvent()
           toggleMute(response.response);
         })
         .catch(handleError);
+
+        browser.tabs
+        .sendMessage(tabs[0].id, { command: "getLoop" })
+        .then((response) => {
+          updateLoopState(response.response);
+        })
+        .catch(handleError);
     })
     .catch(handleError);
 
@@ -103,9 +110,26 @@ browser.runtime.onMessage.addListener((message) => {
   }
 });
   
-// browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => {
-//   const tabId = tabs[0].id;
-//   setInterval(() => {
-//     browser.tabs.sendMessage(tabId, { command: "avoidEarRape" });
-//   }, 1000);
-// });
+function handleChangeInInput(message) {
+  if (message.targetId === "volume-slider") {
+    updateVolumeFromSlider(message.value);
+  } else if (message.targetId === "mute-checkbox") {
+    toggleMute(message.value);
+  } else if (message.targetId === "display-mode") {
+    toggleDisplayMode(message.value);
+  } else if (message.targetId === "loop-button") {
+    toggleLoop(message.value);
+  }
+}
+
+function toggleLoop(isLooped) {
+  browser.tabs
+    .query({ currentWindow: true, active: true })
+    .then((tabs) => {
+      browser.tabs.sendMessage(tabs[0].id, { 
+        command: "setLoop", 
+        isLooped 
+      });
+    })
+    .catch(handleError);
+}

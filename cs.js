@@ -12,6 +12,7 @@ var tc =
     muted:false,
     audioCtx: new AudioContext(),
     gainNode: undefined,
+    loopEnabled: false
   }
 }
 
@@ -37,6 +38,15 @@ browser.runtime.onMessage.addListener((message) => {
     case "avoidEarRape":
       avoidEarRape();
       break;    
+    case "setLoop":
+      tc.vars.loopEnabled = message.isLooped;
+      const videos = document.querySelectorAll('video');
+      videos.forEach(video => {
+          video.loop = message.isLooped;
+      });
+      return Promise.resolve({ response: tc.vars.loopEnabled });
+    case "getLoop":
+      return Promise.resolve({ response: tc.vars.loopEnabled });
   }
 });
 

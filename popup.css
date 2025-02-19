@@ -50,7 +50,7 @@ body.day-mode {
 	border: none;
 	border-radius: 50%;
 	background-color: transparent;
-	color: #000000; /* Default color */
+	color: #000000;
 	font-size: 16px;
 	cursor: pointer;
 	background-image: url('undo.png');
@@ -413,6 +413,8 @@ body.day-mode .header-small::after {
 	transition: background-color 0.5s; 
 	border-radius: 13px; 
 	padding-bottom: 15px;
+	position: relative;
+    padding-right: 60px; 
 }
 
 body.day-mode #tab-list li {
@@ -444,6 +446,73 @@ body.day-mode #tab-list li:hover {
 #tab-list {
 	text-align: left;
 	margin-left: -30px;
+}
+
+.loop-button {
+    display: none;
+    position: absolute;
+    right: 10px;
+    margin: auto; 
+    height: 24px; 
+    border: none;
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.loop-button img {
+    filter: brightness(0) saturate(100%) invert(47%) sepia(82%) saturate(1436%) hue-rotate(165deg) brightness(94%) contrast(101%);
+}
+
+.loop-button.active {
+    display: inline-block;
+    background-color: transparent; 
+}
+
+.loop-button::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    right: calc(100% + 10px); 
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #000000;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+}
+
+.loop-button::before {
+    content: "";
+    position: absolute;
+    right: calc(100% + 4px);  
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 6px solid #000000; 
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.loop-button:hover::after,
+.loop-button:hover::before {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.loop-button:hover::after {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#tab-list li:hover .loop-button {
+    display: inline-block;
 }
 
 .github-button {

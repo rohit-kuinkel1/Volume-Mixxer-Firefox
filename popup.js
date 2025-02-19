@@ -62,19 +62,29 @@ function onEvent() {
         const listItem = document.createElement("li");
         const faviconImg = document.createElement("img");
         const titleSpan = document.createElement("span");
+        const loopButton = createLoopButton(tab.id);
 
         faviconImg.src = tab.favIconUrl;
         faviconImg.classList.add("favicon");
-
+    
         const truncatedTitle = tab.title;
         titleSpan.textContent = truncatedTitle;
         titleSpan.title = tab.title;
         titleSpan.classList.add("title");
-
+    
         listItem.appendChild(faviconImg);
         listItem.appendChild(titleSpan);
+        listItem.appendChild(loopButton);
         tabList.appendChild(listItem);
-      });
+    
+        browser.tabs.sendMessage(tab.id, { command: "getLoop" })
+            .then((response) => {
+                if (response.response) {
+                  loopButton.classList.add('active');
+                }
+            })
+            .catch(e);
+    });
 
       tabList.classList.remove("hidden");
     })
@@ -208,7 +218,7 @@ function onEvent() {
         .then((playingTabs) => {
           const matchingTab = playingTabs.find((tab) => tab.title === tabTitle);
           if (matchingTab) 
-            {
+          {
             browser.tabs.update(matchingTab.id, { active: true });
           }
         })
@@ -250,6 +260,44 @@ function onEvent() {
   {
     console.error(`VolumeMixxer: Error: ${error}`);
   }
+}
+
+function createLoopButton(tabId) { 
+  const button = document.createElement('button');
+  button.classList.add('loop-button');
+  button.setAttribute('data-tooltip', 'Press to loop');
+  button.dataset.tabId = tabId;  
+  
+  const img = document.createElement('img');
+  img.src = 'images/repeat.png';
+  img.alt = 'Loop';
+  img.width = 16;
+  img.height = 16;
+  
+  button.appendChild(img);
+  
+  button.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const isActive = button.classList.contains('active');
+      const targetTabId = button.dataset.tabId; 
+      
+      try {
+          await browser.tabs.sendMessage(parseInt(targetTabId), {
+              command: "setLoop",
+              isLooped: !isActive
+          });
+          
+          if (!isActive) {
+              button.classList.add('active');
+          } else {
+              button.classList.remove('active');
+          }
+      } catch (error) {
+          console.error('VolumeMixxer: Error toggling loop:', error);
+      }
+  });
+  
+  return button;
 }
 
 browser.tabs.onActivated.addListener(onEvent);
