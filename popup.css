@@ -473,18 +473,37 @@ body.day-mode #tab-list li:hover {
 .loop-button::after {
     content: attr(data-tooltip);
     position: absolute;
-    right: calc(100%);  /* Keep the left positioning */
-    top: calc(100% + 10px);    /* Changed from top: 50% to move it down */
-    transform: translateY(0);   /* Remove the Y translation since we want it aligned with bottom */
-    background-color: #333333;
+    right: calc(100% + 10px); 
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #000000;
     color: #ffffff;
-    padding: 6px 8px;
+    padding: 4px 8px;
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 1s ease;
+    transition: opacity 0.5s ease;
+}
+
+.loop-button::before {
+    content: "";
+    position: absolute;
+    right: calc(100% + 4px);  
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 6px solid #000000; 
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.loop-button:hover::after,
+.loop-button:hover::before {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 .loop-button:hover::after {
@@ -535,47 +554,3 @@ body.day-mode #tab-list li:hover {
 		color: rgb(238, 255, 0);
 	}
 }
-
-
-.theme-toggle {
-	display: flex;
-	align-items: center;
-	margin: 10px 0;
-  }
-  
-  .theme-button {
-	background: none;
-	border: none;
-	cursor: pointer;
-	padding: 5px;
-	position: relative;
-	width: 32px;
-	height: 32px;
-  }
-  
-  .theme-icon {
-	width: 24px;
-	height: 24px;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	transition: opacity 0.3s ease;
-  }
-  
-  .day-icon {
-	opacity: 0;
-  }
-  
-  .night-icon {
-	opacity: 1;
-  }
-  
-  /* When in day mode */
-  .day-mode .day-icon {
-	opacity: 1;
-  }
-  
-  .day-mode .night-icon {
-	opacity: 0;
-  }

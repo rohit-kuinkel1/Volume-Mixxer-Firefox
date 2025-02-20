@@ -7,7 +7,7 @@
   "icons": {
     "96": "images/internal_images/icon.png"
   },
-  "permissions": ["activeTab", "tabs"],
+  "permissions": ["activeTab", "tabs", "storage"],
   "background": {
     "scripts": ["background.js"],
     "persistent": false
