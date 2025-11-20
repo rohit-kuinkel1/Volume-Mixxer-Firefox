@@ -3,6 +3,6 @@ web-ext-artifacts/
 *.jpg
 *.jpeg
 lib/
-images/*.png
+images/
 node_modules
 dist
