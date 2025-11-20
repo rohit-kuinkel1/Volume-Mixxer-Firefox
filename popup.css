@@ -502,6 +502,8 @@ body.day-mode #tab-list li:hover {
 .github-button {
   font-size: 12px;
   text-decoration: none;
+  color: #007bac;
+  letter-spacing: 0.4px;
 }
 
 .github-button:hover {
@@ -512,10 +514,32 @@ body.day-mode #tab-list li:hover {
 .rate-link {
   font-size: 12px;
   text-decoration: none;
+  color: #007bac;
+  letter-spacing: 0.4px;
+}
+
+.rate-link::after {
+  content: " | ";
+  color: #9ca3af;
+  margin: 0 8px;
+}
+
+.explore-link {
+  font-size: 12px;
+  text-decoration: none;
+  color: #007bac;
+  letter-spacing: 0.4px;
+}
+
+.explore-link::after {
+  content: " | ";
+  color: #9ca3af;
+  margin: 0 8px;
 }
 
 .footer-links {
   margin-bottom: 0px;
+  text-align: center;
 }
 
 @keyframes blinkers {
