@@ -9,7 +9,6 @@ import type {
 } from "./types/content";
 
 (() => {
-
   const tc: { settings: VolumeSettings; vars: VolumeVars } = {
     settings: {
       logLevel: 0,
@@ -52,9 +51,11 @@ import type {
         break;
       case "setLoop":
         tc.vars.loopEnabled = message.isLooped;
-        document.querySelectorAll<HTMLVideoElement>("video").forEach((video) => {
-          video.loop = message.isLooped;
-        });
+        document
+          .querySelectorAll<HTMLVideoElement>("video")
+          .forEach((video) => {
+            video.loop = message.isLooped;
+          });
         return Promise.resolve({ response: tc.vars.loopEnabled });
       case "getLoop":
         return Promise.resolve({ response: tc.vars.loopEnabled });
@@ -64,7 +65,8 @@ import type {
 
   function log(message: string, level?: number): void {
     const verbosity = tc.settings.logLevel;
-    const resolvedLevel = typeof level === "undefined" ? tc.settings.defaultLogLevel : level;
+    const resolvedLevel =
+      typeof level === "undefined" ? tc.settings.defaultLogLevel : level;
 
     if (verbosity >= resolvedLevel) {
       if (resolvedLevel === 2) {
@@ -91,11 +93,14 @@ import type {
 
   function setVolume(percentage: number): void {
     if (!tc.vars.gainNode) {
-      // If we somehow get a volume request before init, attempt to initialize.
+      //if we somehow get a volume request before init, attempt to initialize.
       init(document);
     }
 
-    percentage = Math.min(Math.max(Number.isFinite(percentage) ? Number(percentage) : 0, 0), 400);
+    percentage = Math.min(
+      Math.max(Number.isFinite(percentage) ? Number(percentage) : 0, 0),
+      400
+    );
     tc.vars.lastKnownVolume = percentage;
 
     const dB = (percentage / 400) * 72 - 32;
@@ -110,9 +115,20 @@ import type {
       tc.vars.gainNode.gain.linearRampToValueAtTime(gainValue, now + 0.05);
     }
 
-    document.querySelectorAll<MediaElement>("audio, video").forEach((element) => {
-      element.volume = 1;
-    });
+    document
+      .querySelectorAll<MediaElement>("audio, video")
+      .forEach((element) => {
+        element.volume = 1;
+      });
+
+    browser.runtime
+      .sendMessage({
+        command: "updateBadge",
+        percentage: tc.vars.percentage,
+      })
+      .catch(() => {
+        //silently ignore if background script isn't available
+      });
   }
 
   function init(doc: Document): void {

@@ -16,7 +16,10 @@ export type UpdateTabMessage = {
   value?: unknown;
 };
 
-export type BackgroundMessage = { command: "getAudibleTabs" } | UpdateTabMessage;
+export type BackgroundMessage =
+  | { command: "getAudibleTabs" }
+  | UpdateTabMessage
+  | { command: "updateBadge"; percentage: number };
 
 export type BooleanResponse = { response: boolean };
 export type NumberResponse = { response: number };

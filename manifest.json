@@ -5,9 +5,9 @@
   "description": "Boost Volume up to 400%. No Elevated Permissions required. Source on Github.",
   "homepage_url": "https://github.com/rohit-kuinkel1/volume-mixxer",
   "icons": {
-    "48": "images/icon.svg",
-    "96": "images/icon.svg",
-    "128": "images/icon.svg"
+    "48": "images/internal_images/volume-normal.svg",
+    "96": "images/internal_images/volume-normal.svg",
+    "128": "images/internal_images/volume-normal.svg"
   },
   "permissions": ["activeTab", "tabs", "storage"],
   "background": {
@@ -16,9 +16,9 @@
   },
   "browser_action": {
     "default_icon": {
-      "32": "images/icon.svg",
-      "64": "images/icon.svg",
-      "128": "images/icon.svg"
+      "32": "images/internal_images/wave.svg",
+      "64": "images/internal_images/wave.svg",
+      "128": "images/internal_images/wave.svg"
     },
     "default_title": "Volume Mixxer",
     "default_popup": "popup.html"

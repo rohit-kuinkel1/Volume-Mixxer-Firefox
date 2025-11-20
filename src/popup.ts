@@ -4,9 +4,10 @@ import type { BooleanResponse, NumberResponse } from "./types/messages";
 import type { UIElements } from "./types/ui";
 
 (() => {
-
   let ui: UIElements | null = null;
   let initialized = false;
+
+  const ICON_PATH = "images/internal_images/wave.svg";
 
   function getElementOrThrow<T extends HTMLElement>(selector: string): T {
     const element = document.querySelector<T>(selector);
@@ -22,7 +23,8 @@ import type { UIElements } from "./types/ui";
         volumeSlider: getElementOrThrow<HTMLInputElement>("#volume-slider"),
         volumeText: getElementOrThrow<HTMLInputElement>("#volume-text"),
         muteCheckbox: getElementOrThrow<HTMLInputElement>("#mute-checkbox"),
-        displayModeCheckBox: getElementOrThrow<HTMLInputElement>("#display-mode"),
+        displayModeCheckBox:
+          getElementOrThrow<HTMLInputElement>("#display-mode"),
         undoButton: getElementOrThrow<HTMLButtonElement>("#undo-button"),
         tabList: getElementOrThrow<HTMLUListElement>("#tab-list"),
         popupContent: getElementOrThrow<HTMLElement>("#popup-content"),
@@ -34,7 +36,10 @@ import type { UIElements } from "./types/ui";
   }
 
   async function getActiveTabId(): Promise<number | null> {
-    const tabs = await browser.tabs.query({ currentWindow: true, active: true });
+    const tabs = await browser.tabs.query({
+      currentWindow: true,
+      active: true,
+    });
     const [tab] = tabs;
     return typeof tab?.id === "number" ? tab.id : null;
   }
@@ -44,6 +49,47 @@ import type { UIElements } from "./types/ui";
       return 0;
     }
     return Math.min(Math.max(Math.round(value), 0), 400);
+  }
+
+  async function updateBrowserActionIcon(percentage: number): Promise<void> {
+    if (!browser.browserAction?.setIcon) {
+      return;
+    }
+
+    try {
+      const tabId = await getActiveTabId();
+      if (tabId === null) {
+        return;
+      }
+
+      const clamped = clampVolume(percentage);
+      const isMuted = clamped === 0;
+      const badgeText = isMuted ? "" : String(clamped);
+
+      await browser.browserAction.setIcon({
+        path: {
+          32: ICON_PATH,
+          64: ICON_PATH,
+          128: ICON_PATH,
+        },
+        tabId,
+      });
+      await browser.browserAction.setBadgeText({ text: badgeText, tabId });
+      await browser.browserAction.setBadgeBackgroundColor({
+        color: "#000000",
+        tabId,
+      });
+
+      const browserActionWithColor = browser.browserAction as unknown as {
+        setBadgeTextColor?: (details: { color: string | number[]; tabId?: number }) => Promise<void>;
+      };
+
+      if (browserActionWithColor.setBadgeTextColor) {
+        await browserActionWithColor.setBadgeTextColor({ color: "#75c8ff", tabId });
+      }
+    } catch (error) {
+      logError(error);
+    }
   }
 
   function renderVolumeUI(percentage: number, skipMuteUpdate = false): void {
@@ -56,19 +102,27 @@ import type { UIElements } from "./types/ui";
     if (!skipMuteUpdate) {
       elements.muteCheckbox.checked = clamped === 0;
     }
+
+    void updateBrowserActionIcon(clamped);
   }
 
-  async function setVolume(percentage: number, skipMuteUpdate = false): Promise<void> {
+  async function setVolume(
+    percentage: number,
+    skipMuteUpdate = false
+  ): Promise<void> {
     const clamped = clampVolume(percentage);
     renderVolumeUI(clamped, skipMuteUpdate);
 
     try {
       const tabId = await getActiveTabId();
       if (tabId !== null) {
-        await browser.tabs.sendMessage(tabId, { command: "setVolume", percentage: clamped });
+        await browser.tabs.sendMessage(tabId, {
+          command: "setVolume",
+          percentage: clamped,
+        });
       }
     } catch (error) {
-      // Content script not available - silently fail
+      //content script not available; silently fail
       logError(error);
     }
   }
@@ -82,6 +136,10 @@ import type { UIElements } from "./types/ui";
 
     if (updateVolume) {
       await setVolume(isMuted ? 0 : 100, true);
+    } else {
+      void updateBrowserActionIcon(
+        isMuted ? 0 : Number(elements.volumeSlider.value)
+      );
     }
 
     try {
@@ -90,7 +148,7 @@ import type { UIElements } from "./types/ui";
         await browser.tabs.sendMessage(tabId, { command: "setMute", isMuted });
       }
     } catch (error) {
-      // Content script not available - silently fail
+      //content script not available; silently fail
       logError(error);
     }
   }
@@ -199,31 +257,37 @@ import type { UIElements } from "./types/ui";
         return;
       }
 
-      // Try to communicate with content script, but don't show error if it fails
-      // (content scripts don't run on internal browser pages)
+      //try to communicate with content script, but dont show error if it fails
       try {
-        await browser.tabs.sendMessage(tabId, { command: "getVolume" }).then((response) => {
-          const volume = (response as NumberResponse | undefined)?.response;
-          if (typeof volume === "number") {
-            renderVolumeUI(volume);
-          }
-        });
+        await browser.tabs
+          .sendMessage(tabId, { command: "getVolume" })
+          .then((response) => {
+            const volume = (response as NumberResponse | undefined)?.response;
+            if (typeof volume === "number") {
+              renderVolumeUI(volume);
+            }
+          });
 
-        await browser.tabs.sendMessage(tabId, { command: "getDisplayMode" }).then((response) => {
-          const isDayMode = (response as BooleanResponse | undefined)?.response;
-          if (typeof isDayMode === "boolean" && storedMode === null) {
-            toggleDisplayMode(isDayMode, { skipStorage: true });
-          }
-        });
+        await browser.tabs
+          .sendMessage(tabId, { command: "getDisplayMode" })
+          .then((response) => {
+            const isDayMode = (response as BooleanResponse | undefined)
+              ?.response;
+            if (typeof isDayMode === "boolean" && storedMode === null) {
+              toggleDisplayMode(isDayMode, { skipStorage: true });
+            }
+          });
 
-        await browser.tabs.sendMessage(tabId, { command: "getMute" }).then((response) => {
-          const isMuted = (response as BooleanResponse | undefined)?.response;
-          if (typeof isMuted === "boolean") {
-            void toggleMute(isMuted, { updateVolume: false });
-          }
-        });
+        await browser.tabs
+          .sendMessage(tabId, { command: "getMute" })
+          .then((response) => {
+            const isMuted = (response as BooleanResponse | undefined)?.response;
+            if (typeof isMuted === "boolean") {
+              void toggleMute(isMuted, { updateVolume: false });
+            }
+          });
       } catch (error) {
-        // Content script not available (internal page, etc.) - just log and continue
+        //content script not available (internal page, etc.), just log and continue
         logError(error);
       }
     } catch (error) {
@@ -255,20 +319,27 @@ import type { UIElements } from "./types/ui";
     const handleTabClick = (event: Event): void => {
       const target = event.target as HTMLElement | null;
       const tabItem = target?.closest("li");
-      const tabId = tabItem?.dataset.tabId ? Number(tabItem.dataset.tabId) : NaN;
+      const tabId = tabItem?.dataset.tabId
+        ? Number(tabItem.dataset.tabId)
+        : NaN;
       if (!Number.isFinite(tabId)) {
         return;
       }
 
       browser.tabs
         .update(tabId, { active: true })
-        .catch((error) => console.error("VolumeMixxer: Error retrieving audible tabs:", error));
+        .catch((error) =>
+          console.error("VolumeMixxer: Error retrieving audible tabs:", error)
+        );
     };
 
     elements.volumeSlider.addEventListener("input", updateVolumeFromSlider);
     elements.volumeSlider.addEventListener("change", updateVolumeFromSlider);
     elements.muteCheckbox.addEventListener("change", handleMuteChange);
-    elements.displayModeCheckBox.addEventListener("change", handleDisplayModeChange);
+    elements.displayModeCheckBox.addEventListener(
+      "change",
+      handleDisplayModeChange
+    );
     elements.undoButton.addEventListener("click", handleUndoButtonClick);
     elements.tabList.addEventListener("click", handleTabClick);
   }
