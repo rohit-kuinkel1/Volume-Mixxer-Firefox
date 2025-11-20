@@ -53,7 +53,7 @@ import type { BackgroundMessage } from "./types/messages";
       const clamped = Math.min(Math.max(Math.round(percentage), 0), 400);
       const isMuted = clamped === 0;
       const badgeText = isMuted ? "" : String(clamped);
-      const ICON_PATH = "images/internal_images/wave.svg";
+      const ICON_PATH = "images/wave.svg";
 
       await browser.browserAction.setIcon({
         path: {
