@@ -1,5 +1,10 @@
 {
   "devDependencies": {
-    "@types/firefox-webext-browser": "^111.0.1"
+    "@types/firefox-webext-browser": "^111.0.1",
+    "typescript": "^5.4.0"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"const fs = require('fs'); ['dist/background.js', 'dist/cs.js', 'dist/popup.js'].forEach(f => { try { const content = fs.readFileSync(f, 'utf8'); fs.writeFileSync(f, content.replace(/\\nexport \\{\\};\\n?$/, '\\n'), 'utf8'); } catch(e) {} });\"",
+    "build:watch": "tsc -w"
   }
 }
