@@ -7,7 +7,7 @@ import type { UIElements } from "./types/ui";
   let ui: UIElements | null = null;
   let initialized = false;
 
-  const ICON_PATH = "images/internal_images/wave.svg";
+  const ICON_PATH = "images/wave.svg";
 
   function getElementOrThrow<T extends HTMLElement>(selector: string): T {
     const element = document.querySelector<T>(selector);

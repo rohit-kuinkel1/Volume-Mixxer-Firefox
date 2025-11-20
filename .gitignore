@@ -6,4 +6,4 @@ lib/
 images/
 node_modules
 dist
-*.zip
+/*.zip

@@ -1,11 +1,12 @@
 {
   "devDependencies": {
     "@types/firefox-webext-browser": "^111.0.1",
-    "typescript": "^5.4.0"
+    "typescript": "^5.4.0",
+    "web-ext": "^9.2.0"
   },
   "scripts": {
     "build": "tsc && node -e \"const fs = require('fs'); ['dist/background.js', 'dist/cs.js', 'dist/popup.js'].forEach(f => { try { const content = fs.readFileSync(f, 'utf8'); fs.writeFileSync(f, content.replace(/\\nexport \\{\\};\\n?$/, '\\n'), 'utf8'); } catch(e) {} });\"",
     "build:watch": "tsc -w",
-    "package": "npm run build && powershell -Command \"Compress-Archive -Path manifest.json,popup.html,popup.css,dist,images -DestinationPath volume-mixxer.zip -Force\""
+    "package": "npm run build && web-ext build --overwrite-dest"
   }
 }
