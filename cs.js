@@ -9,6 +9,7 @@ var tc = {
     muted: false,
     audioCtx: new AudioContext(),
     gainNode: undefined,
+    gainConnected: false,
     loopEnabled: false,
     lastKnownVolume: 100, //try fix rare ear rapes
   },
@@ -71,7 +72,6 @@ function log(message, level) {
 function connectOutput(element) {
   element.volume = 1;
   tc.vars.audioCtx.createMediaElementSource(element).connect(tc.vars.gainNode);
-  tc.vars.gainNode.connect(tc.vars.audioCtx.destination);
   setVolume(tc.vars.percentage);
 }
 
@@ -108,6 +108,13 @@ function init(document) {
   tc.vars.gainNode = tc.vars.audioCtx.createGain();
   tc.vars.gainNode.gain.value = 1;
   tc.vars.gainNode.channelInterpretation = "speakers";
+
+  // Only connect the gain node to the output once; multiple connections
+  // stack and can unexpectedly amplify the signal.
+  if (!tc.vars.gainConnected) {
+    tc.vars.gainNode.connect(tc.vars.audioCtx.destination);
+    tc.vars.gainConnected = true;
+  }
 
   document.querySelectorAll("audio, video").forEach((element) => {
     element.volume = 1; //reset native volume
